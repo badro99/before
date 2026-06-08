@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>BEFORE — Le HUB des soirées</title>
 <style>
   :root{
@@ -25,39 +25,23 @@
   html,body{margin:0;height:100%;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
-    background:radial-gradient(1200px 800px at 20% -10%,#3d1130 0%,#140a14 55%,#05040a 100%);
-    display:flex;align-items:center;justify-content:center;min-height:100vh;
+    background:var(--bg);
     color:var(--txt);overflow:hidden;
   }
-  .stage{display:flex;align-items:center;justify-content:center;}
+  .stage{width:100%;height:100%;}
 
-  /* ===== iPhone frame ===== */
+  /* ===== plein écran (plus de cadre téléphone) ===== */
   .phone{
-    position:relative;width:430px;height:870px;
-    transform-origin:center center;
-    background:#000;border-radius:55px;
-    padding:14px;
-    box-shadow:0 0 0 12px #1b1b1f,0 0 0 14px #2c2c33,0 40px 90px rgba(0,0,0,.7);
-  }
-  .phone::after{ /* side buttons */
-    content:"";position:absolute;left:-16px;top:170px;width:4px;height:64px;
-    background:#222;border-radius:4px;box-shadow:0 90px 0 #222,0 -100px 0 #222;
-  }
-  .notch{
-    position:absolute;top:14px;left:50%;transform:translateX(-50%);
-    width:150px;height:34px;background:#000;border-radius:0 0 22px 22px;z-index:50;
+    position:relative;width:100%;height:100%;
+    background:transparent;border-radius:0;padding:0;box-shadow:none;
   }
   .screen{
-    position:relative;width:100%;height:100%;background:var(--bg);
-    border-radius:42px;overflow:hidden;display:flex;flex-direction:column;
+    position:relative;width:100%;height:100%;
+    background:radial-gradient(1200px 800px at 20% -10%,#3d1130 0%,#140a14 55%,#05040a 100%);
+    overflow:hidden;display:flex;flex-direction:column;
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
   }
-  .statusbar{
-    height:50px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;
-    padding:0 34px 8px;font-size:16px;font-weight:600;z-index:40;color:#fff;
-  }
-  .statusbar .time{font-size:16px;font-weight:600;letter-spacing:.3px;}
-  .statusbar .right{display:flex;gap:7px;align-items:center;}
-  .statusbar .right svg{display:block;}
 
   /* ===== app viewport ===== */
   #app{flex:1;position:relative;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
@@ -200,32 +184,7 @@
 <body>
   <div class="stage">
   <div class="phone">
-    <div class="notch"></div>
     <div class="screen">
-      <div class="statusbar">
-        <span class="time">22:48</span>
-        <span class="right">
-          <!-- cellular -->
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff">
-            <rect x="0"  y="8" width="3" height="4" rx="1"/>
-            <rect x="5"  y="5" width="3" height="7" rx="1"/>
-            <rect x="10" y="2.5" width="3" height="9.5" rx="1"/>
-            <rect x="15" y="0" width="3" height="12" rx="1"/>
-          </svg>
-          <!-- wifi -->
-          <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff">
-            <path d="M8.5 1.2C5.4 1.2 2.6 2.4.6 4.4L2 5.9C3.7 4.2 6 3.2 8.5 3.2s4.8 1 6.5 2.7l1.4-1.5C14.4 2.4 11.6 1.2 8.5 1.2z"/>
-            <path d="M8.5 5.3c-1.8 0-3.5.7-4.7 2l1.5 1.5c.8-.9 2-1.4 3.2-1.4s2.4.5 3.2 1.4l1.5-1.5c-1.2-1.3-2.9-2-4.7-2z"/>
-            <circle cx="8.5" cy="10.4" r="1.5"/>
-          </svg>
-          <!-- battery -->
-          <svg width="28" height="13" viewBox="0 0 28 13">
-            <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity="0.45"/>
-            <rect x="2" y="2" width="18" height="9" rx="2" fill="#fff"/>
-            <path d="M25 4.2v4.6c1.1-.3 1.1-4.3 0-4.6z" fill="#fff" fill-opacity="0.5"/>
-          </svg>
-        </span>
-      </div>
       <div id="app"></div>
       <div class="toast" id="toast"></div>
     </div>
@@ -985,19 +944,7 @@ function shareAlbum(){
   else toast('Lien copié pour tes amis ↗ (démo)');
 }
 
-/* ---------- responsive scale (toujours visible en entier) ---------- */
-function fitPhone(){
-  const phone=document.querySelector('.phone');
-  const pad=24; // marge autour
-  const scale=Math.min(
-    (window.innerHeight - pad) / 906,   // hauteur frame ≈ 870 + bordures
-    (window.innerWidth  - pad) / 466,   // largeur frame ≈ 430 + bordures
-    1
-  );
-  phone.style.transform=`scale(${scale})`;
-}
-window.addEventListener('resize',fitPhone);
-fitPhone();
+/* ---------- plein écran : plus de mise à l'échelle ---------- */
 
 /* ---------- boot ---------- */
 home();
