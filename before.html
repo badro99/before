@@ -65,6 +65,48 @@
   }
   .tag{text-align:center;color:var(--muted);font-size:12.5px;letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
 
+  /* ===== intro / splash ===== */
+  .intro{
+    position:absolute;inset:0;z-index:60;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:radial-gradient(1200px 800px at 50% 38%,#3d1130 0%,#140a14 55%,#05040a 100%);
+    animation:introOut .55s cubic-bezier(.7,0,.84,0) 1.85s forwards;
+  }
+  .intro__glow{
+    position:absolute;width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,77,141,.45),rgba(255,77,141,0) 65%);
+    opacity:0;transform:scale(.6);filter:blur(8px);
+    animation:introGlow 1.7s cubic-bezier(.16,1,.3,1) .1s forwards;
+  }
+  .intro .logo{
+    position:relative;font-size:54px;opacity:0;
+    letter-spacing:18px;transform:scale(1.14);
+    filter:drop-shadow(0 8px 30px rgba(255,77,141,.55)) blur(16px);
+    animation:introLogo 1.4s cubic-bezier(.16,1,.3,1) .12s forwards;
+  }
+  .intro .tag{
+    opacity:0;transform:translateY(8px);
+    animation:introTag .8s cubic-bezier(.16,1,.3,1) .85s forwards;
+  }
+  @keyframes introLogo{
+    0%{opacity:0;letter-spacing:18px;transform:scale(1.14);filter:drop-shadow(0 8px 30px rgba(255,77,141,.55)) blur(16px);}
+    55%{opacity:1;}
+    100%{opacity:1;letter-spacing:6px;transform:scale(1);filter:drop-shadow(0 6px 24px rgba(255,77,141,.5)) blur(0);}
+  }
+  @keyframes introGlow{
+    0%{opacity:0;transform:scale(.6);}
+    50%{opacity:1;transform:scale(1);}
+    100%{opacity:.65;transform:scale(1.05);}
+  }
+  @keyframes introTag{to{opacity:1;transform:translateY(0);}}
+  @keyframes introOut{to{opacity:0;transform:scale(1.05);visibility:hidden;pointer-events:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .intro{animation:introOut .4s ease 1.2s forwards;}
+    .intro__glow,.intro .logo,.intro .tag{animation:introFadeIn .5s ease both;}
+    @keyframes introFadeIn{from{opacity:0;}to{opacity:1;}}
+    .intro .logo{letter-spacing:6px;transform:none;filter:drop-shadow(0 6px 24px rgba(255,77,141,.5));}
+  }
+
   .btn{
     display:flex;align-items:center;gap:12px;width:100%;border:none;cursor:pointer;
     padding:18px 20px;border-radius:20px;font-size:16px;font-weight:700;color:#fff;
@@ -187,6 +229,11 @@
     <div class="screen">
       <div id="app"></div>
       <div class="toast" id="toast"></div>
+      <div class="intro" id="intro">
+        <div class="intro__glow"></div>
+        <div class="logo">BEFORE</div>
+        <div class="tag">Le HUB des soirées</div>
+      </div>
     </div>
   </div>
   </div>
@@ -948,6 +995,14 @@ function shareAlbum(){
 
 /* ---------- boot ---------- */
 home();
+
+/* retire le splash d'ouverture une fois l'animation terminée */
+(function(){
+  const intro = document.getElementById('intro');
+  if(!intro) return;
+  intro.addEventListener('animationend', e=>{ if(e.animationName==='introOut') intro.remove(); });
+  setTimeout(()=>intro.remove(), 3000); // filet de sécurité
+})();
 </script>
 </body>
 </html>
